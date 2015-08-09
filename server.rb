@@ -1,4 +1,4 @@
-require 'un'
+require 'webrick'
 require 'socket'
 
 bind_ip = Socket.ip_address_list.find(&:ipv4_private?).ip_address
@@ -6,7 +6,16 @@ port = "5000"
 root = "./fixtures"
 
 puts ">>> Point your app at: http://#{bind_ip}:#{port}/YourFixtureFile.xml"
-puts "ruby -run -e httpd -- -p #{port} -b #{bind_ip} #{root}\n\n"
+puts ">>> PORT: #{port}; BIND: #{bind_ip}; ROOT: #{root}\n\n"
 
-%W[ -p #{port} -b #{bind_ip} #{root} ].each { |a| ARGV << a }
-httpd()
+s = WEBrick::HTTPServer.new(
+  :BindAddress => bind_ip,
+  :DocumentRoot => root,
+  :Port => port
+)
+
+%w[ TERM QUIT ].each do |sig|
+  Signal.trap(sig, proc { s.shutdown })
+end
+
+s.start
