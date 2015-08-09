@@ -6,7 +6,7 @@ port = "5000"
 root = "./fixtures"
 
 puts ">>> Point your app at: http://#{bind_ip}:#{port}/YourFixtureFile.xml"
-puts ">>> PORT: #{port}; BIND: #{bind_ip}; ROOT: #{root}\n\n"
+puts ">>> BIND: #{bind_ip}; PORT: #{port}; ROOT: #{root}\n\n"
 
 s = WEBrick::HTTPServer.new(
   :BindAddress => bind_ip,
